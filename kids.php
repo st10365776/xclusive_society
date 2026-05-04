@@ -116,20 +116,6 @@
         </div>
 
     </section>
-
-    <!-- Include footer -->
-    <?php include 'includes/footer.php'; ?>
-</body>
-</html>
-            <input type="hidden" name="price" value="1200">
-            <input type="hidden" name="image" value="images/kids/pullover.jpg">
-
-                <button type="submit">Add to Cart</button>
-            </form>
-        </div>
-
-    </section>
-
     <!-- Include footer -->
     <?php include 'includes/footer.php'; ?>
 </body>

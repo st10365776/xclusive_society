@@ -34,9 +34,6 @@
                 <button type="submit">Add to Cart</button>
             </form>
         </div>
-
-            <button type="submit">Add to Cart</button>
-
         </form>
     </div>
 

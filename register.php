@@ -8,97 +8,66 @@
 </head>
 <body>
    <?php
-   /**
-    * USER REGISTRATION PAGE
-    * ======================
-    * Handles user account creation with comprehensive validation:
-    * - Name: letters and spaces only (2-50 characters)
-    * - Email: valid email format, must be unique
-    * - Password: strong password (8+ chars, uppercase, lowercase, number, special char)
-    * 
-    * New accounts start as unverified (verified=0) pending admin approval.
-    */
-   
-   include 'includes/DBConn.php';
+session_start();
+include 'includes/DBConn.php';
 
-   $message = "";
+$message = "";
 
-   // Process registration form submission
-   if(isset($_POST['register'])){
+if(isset($_POST['register'])){
 
-       // Trim whitespace from inputs
-       $name = trim($_POST['name']);
-       $email = trim($_POST['email']);
-       $passwordRaw = $_POST['password'];
+    $name = trim($_POST['name']);
+    $email = trim($_POST['email']);
+    $passwordRaw = $_POST['password'];
 
-       // Array to store validation errors
-       $errors = [];
+    $errors = [];
 
-       // Validate name (letters and spaces only)
-       if(empty($name)){
-           $errors[] = "Full name is required.";
-       } elseif(!preg_match("/^[a-zA-Z\s]{2,50}$/", $name)){
-           $errors[] = "Name must contain only letters and spaces (2–50 characters).";
-       }
+    if(empty($name)){
+        $errors[] = "Full name is required.";
+    }
 
-       // Validate email format
-       if(empty($email)){
-           $errors[] = "Email is required.";
-       } elseif(!filter_var($email, FILTER_VALIDATE_EMAIL)){
-           $errors[] = "Invalid email format.";
-       }
+    if(empty($email)){
+        $errors[] = "Email is required.";
+    }
 
-       // Validate password strength
-       if(empty($passwordRaw)){
-           $errors[] = "Password is required.";
-       } elseif(strlen($passwordRaw) < 8){
-           $errors[] = "Password must be at least 8 characters.";
-       } elseif(!preg_match("/[A-Z]/", $passwordRaw)){
-           $errors[] = "Password must include at least one uppercase letter.";
-       } elseif(!preg_match("/[a-z]/", $passwordRaw)){
-           $errors[] = "Password must include at least one lowercase letter.";
-       } elseif(!preg_match("/[0-9]/", $passwordRaw)){
-           $errors[] = "Password must include at least one number.";
-       } elseif(!preg_match("/[\W]/", $passwordRaw)){
-           $errors[] = "Password must include at least one special character.";
-       }
+    if(empty($passwordRaw)){
+        $errors[] = "Password is required.";
+    }
 
-       // Proceed if no validation errors
-       if(empty($errors)){
+    if(empty($errors)){
 
-           // Hash password for secure storage
-           $password = password_hash($passwordRaw, PASSWORD_DEFAULT);
+        $password = password_hash($passwordRaw, PASSWORD_DEFAULT);
 
-           // Check if email already exists in database
-           $check = $conn->prepare("SELECT id FROM tblUser WHERE email = ?");
-           $check->bind_param("s", $email);
-           $check->execute();
-           $check->store_result();
+        $check = $conn->prepare("SELECT userID FROM tblUser WHERE email=?");
+        $check->bind_param("s", $email);
+        $check->execute();
+        $check->store_result();
 
-           if($check->num_rows > 0){
-               $message = "Email already exists.";
-           } else {
+        if($check->num_rows > 0){
+            $message = "Email already exists.";
+        } else {
 
-               // Insert new user into database with verified=0 (pending approval)
-               $sql = "INSERT INTO tblUser(name,email,password,verified)
-                       VALUES(?,?,?,0)";
+            $sql = "INSERT INTO tblUser(name,email,password,verified)
+                    VALUES(?,?,?,0)";
 
-               $stmt = $conn->prepare($sql);
-               $stmt->bind_param("sss",$name,$email,$password);
+            $stmt = $conn->prepare($sql);
+            $stmt->bind_param("sss",$name,$email,$password);
 
-               if($stmt->execute()){
-                   $message = "Registration successful. Waiting for admin approval.";
-               } else {
-                   $message = "Something went wrong. Try again.";
-               }
-           }
+            if($stmt->execute()){
 
-       } else {
-           // Display all validation errors
-           $message = implode("<br>", $errors);
-       }
-   }
-   ?>
+                // CLEAN REDIRECT (NOW IT WORKS)
+                header("Location: login.php?registered=1");
+                exit();
+
+            } else {
+                $message = "Something went wrong.";
+            }
+        }
+
+    } else {
+        $message = implode("<br>", $errors);
+    }
+}
+?>
 
    <!-- Include navigation header -->
    <?php include 'includes/header.php'; ?>

@@ -122,8 +122,8 @@ cursor:pointer;
 <td>
 
 <?php if(!$user['verified']): ?>
-<a href="verify_user.php?id=<?= $user['userID'] ?>">
-<button class="verify">Verify</button>
+<a href="/xclusive_society/admin/verify_users.php?id=<?= $user['userID']; ?>">
+    <button class="verify">Verify</button>
 </a>
 <?php endif; ?>
 
