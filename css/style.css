@@ -538,3 +538,19 @@ border:1px solid #ddd;
 .remove-btn:hover {
     background-color: #b3001b;
 }
+
+.cancel-btn {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 8px 12px;
+    background: #e60023;
+    color: white;
+    text-decoration: none;
+    border-radius: 6px;
+    font-size: 13px;
+    transition: 0.3s;
+}
+
+.cancel-btn:hover {
+    background: #b3001b;
+}

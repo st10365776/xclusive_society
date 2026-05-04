@@ -20,25 +20,90 @@ $userID = $_SESSION['userID'];
 
 <?php include 'includes/header.php'; ?>
 
+<style>
+body {
+    font-family: Arial, sans-serif;
+    background: #f5f5f5;
+}
+
+.profile-container {
+    max-width: 900px;
+    margin: auto;
+    padding: 20px;
+}
+
+.profile-card {
+    background: #fff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+}
+
+.order-card {
+    border: 1px solid #ddd;
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 15px;
+    background: #fafafa;
+}
+
+.order-header {
+    display: flex;
+    justify-content: space-between;
+    font-weight: bold;
+}
+
+.status {
+    padding: 5px 10px;
+    background: #333;
+    color: #fff;
+    border-radius: 5px;
+    font-size: 12px;
+}
+
+.cancel-btn {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 8px 12px;
+    background: red;
+    color: white;
+    text-decoration: none;
+    border-radius: 6px;
+    font-size: 13px;
+}
+
+.cancel-btn:hover {
+    background: darkred;
+}
+</style>
+
+<div class="profile-container">
+
+<!-- USER INFO -->
+<div class="profile-card">
+
 <?php
-// GET USER INFO
 $sql = "SELECT * FROM tblUser WHERE userID = ?";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("i", $userID);
 $stmt->execute();
-$result = $stmt->get_result();
-$user = $result->fetch_assoc();
+$user = $stmt->get_result()->fetch_assoc();
 ?>
 
-<h1>Welcome, <?php echo htmlspecialchars($user['name']); ?> 👋</h1>
-<p>Email: <?php echo htmlspecialchars($user['email']); ?></p>
+<h2>Welcome, <?= htmlspecialchars($user['name']); ?> 👋</h2>
+<p>Email: <?= htmlspecialchars($user['email']); ?></p>
 
-<hr>
+<a href="logout.php">Logout</a>
+
+</div>
+
+<!-- ORDERS -->
+<div class="profile-card">
 
 <h2>Your Orders</h2>
 
 <?php
-// GET ORDERS FROM tblAorder
 $orderSQL = "SELECT * FROM tblAorder WHERE userID = ? ORDER BY orderID DESC";
 $stmt = $conn->prepare($orderSQL);
 $stmt->bind_param("i", $userID);
@@ -48,16 +113,37 @@ $orders = $stmt->get_result();
 if ($orders->num_rows == 0) {
     echo "<p>No orders yet.</p>";
 } else {
+
     while ($order = $orders->fetch_assoc()) {
-        echo "
-        <div style='border:1px solid #ccc; padding:10px; margin:10px 0;'>
-            <p>Order ID: {$order['orderID']}</p>
-            <p>Total: R{$order['totalAmount']}</p>
-            <p>Status: {$order['status']}</p>
-        </div>";
+        ?>
+
+        <div class="order-card">
+
+            <div class="order-header">
+                <span>Order #<?= $order['orderID']; ?></span>
+                <span class="status">Pending</span>
+            </div>
+
+            <p>Total: R<?= $order['total']; ?></p>
+            <p>Date: <?= $order['orderDate']; ?></p>
+
+            <!-- CANCEL ORDER -->
+            <a class="cancel-btn"
+               href="cancel-order.php?orderID=<?= $order['orderID']; ?>"
+               onclick="return confirm('Cancel this order?')">
+               Cancel Order
+            </a>
+
+        </div>
+
+        <?php
     }
 }
 ?>
+
+</div>
+
+</div>
 
 <?php include 'includes/footer.php'; ?>
 

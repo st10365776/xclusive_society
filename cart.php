@@ -67,7 +67,9 @@ $total = 0;
 
 <p>Total: R<?php echo $total; ?></p>
 
-<a href="checkout.php" class="checkout-btn">Checkout</a>
+<form action="place_order.php" method="POST">
+    <button class="checkout-btn">Place Order</button>
+</form>
 
 </div>
 

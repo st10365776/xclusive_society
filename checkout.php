@@ -8,56 +8,54 @@
 <body>
     <?php
 session_start();
-include 'includes/db.php';
+include 'includes/DBConn.php';
 
-$user_id = $_SESSION['userID'];
+if (!isset($_SESSION['userID']) || empty($_SESSION['cart'])) {
+    header("Location: cart.php");
+    exit();
+}
+
+$userID = $_SESSION['userID'];
+$cart = $_SESSION['cart'];
 
 $total = 0;
 
-foreach($_SESSION['cart'] as $id=>$qty){
-    $result = $conn->query("SELECT * FROM products WHERE id=$id");
-    $product = $result->fetch_assoc();
-
-    $total += $product['price'] * $qty;
+/* 1. CALCULATE TOTAL */
+foreach ($cart as $id => $item) {
+    $total += $item['price'] * $item['qty'];
 }
 
-$conn->query("
-INSERT INTO orders(userID,total)
-VALUES('$user_id','$total')
-");
+/* 2. INSERT INTO tblAorder */
+$stmt = $conn->prepare("INSERT INTO tblAorder (userID, total) VALUES (?, ?)");
+$stmt->bind_param("id", $userID, $total);
+$stmt->execute();
 
-$order_id = $conn->insert_id;
+$orderID = $stmt->insert_id;
 
-foreach($_SESSION['cart'] as $id=>$qty){
+/* 3. OPTIONAL: If you want order items table later */
+foreach ($cart as $id => $item) {
 
-    $product = $conn->query("SELECT * FROM tblClothes WHERE id=$id")->fetch_assoc();
+    $productID = $id;
+    $qty = $item['qty'];
+    $price = $item['price'];
 
-    $conn->query("
-    INSERT INTO order_items(order_id,product_id,quantity,price)
-    VALUES('$order_id','$id','$qty','".$product['price']."')
+    // If you create tblOrderItems later, use this:
+    /*
+    $stmt2 = $conn->prepare("
+        INSERT INTO tblOrderItems (orderID, productID, quantity, price)
+        VALUES (?, ?, ?, ?)
     ");
+    $stmt2->bind_param("iiid", $orderID, $productID, $qty, $price);
+    $stmt2->execute();
+    */
 }
 
+/* 4. CLEAR CART */
 unset($_SESSION['cart']);
 
+/* 5. REDIRECT */
 header("Location: profile.php");
 exit();
-?>
-
-<h2>Your Orders</h2>
-
-<?php
-$user_id = $_SESSION['user_id'];
-
-$orders = $conn->query("
-SELECT * FROM orders
-WHERE user_id=$user_id
-ORDER BY order_date DESC
-");
-
-while($order = $orders->fetch_assoc()){
-    echo "<p>Order #".$order['id']." - R".$order['total']."</p>";
-}
 ?>
 
 <h1>Checkout</h1>
