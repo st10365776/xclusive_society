@@ -23,6 +23,7 @@
 </div>
 
 <ul class="nav-links">
+<li><a href="new.php">New</a></li>
 <li><a href="men.php">Men</a></li>
 <li><a href="women.php">Women</a></li>
 <li><a href="kids.php">Kids</a></li>

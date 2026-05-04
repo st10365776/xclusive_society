@@ -38,7 +38,7 @@ $user = $stmt->get_result()->fetch_assoc();
 <h2>Welcome, <?= htmlspecialchars($user['name']); ?> 👋</h2>
 <p>Email: <?= htmlspecialchars($user['email']); ?></p>
 
-<a href="logout.php" class="logout-btn">Logout</a>
+<a href="logout.php" class="logout">Logout</a>
 
 </div>
 
@@ -88,7 +88,6 @@ if ($orders->num_rows == 0) {
 </div>
 
 </div>
-<a href="logout.php" class="logout-btn">Logout</a>
 
 <?php include 'includes/footer.php'; ?>
 
