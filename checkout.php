@@ -39,7 +39,7 @@ foreach ($cart as $id => $item) {
     $qty = $item['qty'];
     $price = $item['price'];
 
-    // If you create tblOrderItems later, use this:
+    //
     /*
     $stmt2 = $conn->prepare("
         INSERT INTO tblOrderItems (orderID, productID, quantity, price)

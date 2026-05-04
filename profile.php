@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
     <title>Document</title>
 </head>
 <body>
@@ -20,63 +21,6 @@ $userID = $_SESSION['userID'];
 
 <?php include 'includes/header.php'; ?>
 
-<style>
-body {
-    font-family: Arial, sans-serif;
-    background: #f5f5f5;
-}
-
-.profile-container {
-    max-width: 900px;
-    margin: auto;
-    padding: 20px;
-}
-
-.profile-card {
-    background: #fff;
-    padding: 20px;
-    border-radius: 12px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    margin-bottom: 20px;
-}
-
-.order-card {
-    border: 1px solid #ddd;
-    padding: 15px;
-    border-radius: 10px;
-    margin-bottom: 15px;
-    background: #fafafa;
-}
-
-.order-header {
-    display: flex;
-    justify-content: space-between;
-    font-weight: bold;
-}
-
-.status {
-    padding: 5px 10px;
-    background: #333;
-    color: #fff;
-    border-radius: 5px;
-    font-size: 12px;
-}
-
-.cancel-btn {
-    display: inline-block;
-    margin-top: 10px;
-    padding: 8px 12px;
-    background: red;
-    color: white;
-    text-decoration: none;
-    border-radius: 6px;
-    font-size: 13px;
-}
-
-.cancel-btn:hover {
-    background: darkred;
-}
-</style>
 
 <div class="profile-container">
 
