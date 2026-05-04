@@ -554,3 +554,20 @@ border:1px solid #ddd;
 .cancel-btn:hover {
     background: #b3001b;
 }
+
+.logout-btn {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 10px 15px;
+    background: #111;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 6px;
+    font-size: 13px;
+    transition: 0.3s ease;
+}
+
+.logout-btn:hover {
+    background: #e60023;
+    transform: scale(1.05);
+}
