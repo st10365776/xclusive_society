@@ -522,3 +522,19 @@ margin:12px 0;
 border-radius:10px;
 border:1px solid #ddd;
 }
+
+.remove-btn {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 8px 12px;
+    background-color: #e60023;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    font-size: 13px;
+    transition: 0.3s;
+}
+
+.remove-btn:hover {
+    background-color: #b3001b;
+}

@@ -6,19 +6,31 @@
     <title>Document</title>
 </head>
 <body>
-    <?php
+   <?php
 session_start();
 
-$id = $_GET['id'];
+$product = [
+    "id" => $_POST['id'],
+    "name" => $_POST['name'],
+    "price" => $_POST['price'],
+    "image" => $_POST['image']
+];
 
-if(!isset($_SESSION['cart'])){
+$id = $product['id'];
+
+if (!isset($_SESSION['cart'])) {
     $_SESSION['cart'] = [];
 }
 
-if(isset($_SESSION['cart'][$id])){
-    $_SESSION['cart'][$id]++;
-}else{
-    $_SESSION['cart'][$id] = 1;
+if (isset($_SESSION['cart'][$id])) {
+    $_SESSION['cart'][$id]['qty'] += 1;
+} else {
+    $_SESSION['cart'][$id] = [
+        "name" => $product['name'],
+        "price" => $product['price'],
+        "image" => $product['image'],
+        "qty" => 1
+    ];
 }
 
 header("Location: cart.php");
