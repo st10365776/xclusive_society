@@ -27,6 +27,7 @@
 <li><a href="men.php">Men</a></li>
 <li><a href="women.php">Women</a></li>
 <li><a href="kids.php">Kids</a></li>
+<li><a href="contact.php">Contact Us</a></li>
 </ul>
 
 <div class="icons">
