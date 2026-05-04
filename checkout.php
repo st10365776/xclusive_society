@@ -8,24 +8,54 @@
 <body>
     <?php
 session_start();
-include 'includes/db.php';
+include 'includes/DBConn.php';
 
-if(!isset($_SESSION['user_id'])){
-    header("Location: login.php");
+if (!isset($_SESSION['userID']) || empty($_SESSION['cart'])) {
+    header("Location: cart.php");
     exit();
 }
 
-$cart = $_SESSION['cart'] ?? [];
+$userID = $_SESSION['userID'];
+$cart = $_SESSION['cart'];
 
 $total = 0;
 
-foreach($cart as $product_id => $qty){
-
-    $result = $conn->query("SELECT * FROM products WHERE id=$product_id");
-    $product = $result->fetch_assoc();
-
-    $total += $product['price'] * $qty;
+/* 1. CALCULATE TOTAL */
+foreach ($cart as $id => $item) {
+    $total += $item['price'] * $item['qty'];
 }
+
+/* 2. INSERT INTO tblAorder */
+$stmt = $conn->prepare("INSERT INTO tblAorder (userID, total) VALUES (?, ?)");
+$stmt->bind_param("id", $userID, $total);
+$stmt->execute();
+
+$orderID = $stmt->insert_id;
+
+/* 3. OPTIONAL: If you want order items table later */
+foreach ($cart as $id => $item) {
+
+    $productID = $id;
+    $qty = $item['qty'];
+    $price = $item['price'];
+
+    //
+    /*
+    $stmt2 = $conn->prepare("
+        INSERT INTO tblOrderItems (orderID, productID, quantity, price)
+        VALUES (?, ?, ?, ?)
+    ");
+    $stmt2->bind_param("iiid", $orderID, $productID, $qty, $price);
+    $stmt2->execute();
+    */
+}
+
+/* 4. CLEAR CART */
+unset($_SESSION['cart']);
+
+/* 5. REDIRECT */
+header("Location: profile.php");
+exit();
 ?>
 
 <h1>Checkout</h1>

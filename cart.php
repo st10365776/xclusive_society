@@ -6,82 +6,70 @@
     <title>Document</title>
 </head>
 <body>
-    <?php include 'includes/header.php'; ?>
+    <?php
+session_start();
+include 'includes/header.php';
+
+$cart = $_SESSION['cart'] ?? [];
+$total = 0;
+?>
 
 <section class="cart-page">
 
-<h1 class="cart-title">Your Bag</h1>
+<h1>Your Bag</h1>
 
 <div class="cart-wrapper">
 
-<!-- LEFT SIDE -->
 <div class="cart-items">
 
-<div class="cart-card">
+<?php if (empty($cart)): ?>
+    <p>Your cart is empty.</p>
+<?php else: ?>
 
-<img src="images/men/hoodiew.jpg">
+<?php foreach ($cart as $id => $item): ?>
 
-<div class="cart-info">
-<h3>X.S Casual Hoodie</h3>
-<p class="price">R699</p>
-
-<div class="qty">
-<button>-</button>
-<span>1</span>
-<button>+</button>
-</div>
-
-<button class="remove">Remove</button>
-</div>
-
-</div>
-
+<?php $subtotal = $item['price'] * $item['qty']; $total += $subtotal; ?>
 
 <div class="cart-card">
 
-<img src="images/men/tsm.jpg">
+<img src="<?php echo $item['image']; ?>">
 
 <div class="cart-info">
-<h3>X.S Casual T-Shirt</h3>
-<p class="price">R599</p>
 
-<div class="qty">
-<button>-</button>
-<span>1</span>
-<button>+</button>
+<h3><?php echo $item['name']; ?></h3>
+<p>R<?php echo $item['price']; ?></p>
+
+<p>Qty: <?php echo $item['qty']; ?></p>
+
+<p>Subtotal: R<?php echo $subtotal; ?></p>
+
+<!-- ✅ REMOVE BUTTON ADDED HERE -->
+<a href="remove-from-cart.php?id=<?php echo $id; ?>" 
+   class="remove-btn"
+   onclick="return confirm('Remove this item from cart?')">
+   Remove
+</a>
+
 </div>
 
-<button class="remove">Remove</button>
 </div>
 
-</div>
+<?php endforeach; ?>
+
+<?php endif; ?>
 
 </div>
 
-
-<!-- RIGHT SIDE -->
+<!-- SUMMARY -->
 <div class="cart-summary">
 
 <h2>Order Summary</h2>
 
-<div class="summary-line">
-<span>Subtotal</span>
-<span>R1298</span>
-</div>
+<p>Total: R<?php echo $total; ?></p>
 
-<div class="summary-line">
-<span>Shipping</span>
-<span>Free</span>
-</div>
-
-<hr>
-
-<div class="summary-total">
-<span>Total</span>
-<span>R1298</span>
-</div>
-
-<a href="checkout.php" class="checkout-btn">Checkout</a>
+<form action="place_order.php" method="POST">
+    <button class="checkout-btn">Place Order</button>
+</form>
 
 </div>
 

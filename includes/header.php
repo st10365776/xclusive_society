@@ -14,12 +14,6 @@
 
 <body>
 
-<?php
-if(session_status() === PHP_SESSION_NONE){
-session_start();
-}
-?>
-
 <nav class="navbar">
 
 <div class="logo">
@@ -29,6 +23,7 @@ session_start();
 </div>
 
 <ul class="nav-links">
+<li><a href="new.php">New</a></li>
 <li><a href="men.php">Men</a></li>
 <li><a href="women.php">Women</a></li>
 <li><a href="kids.php">Kids</a></li>

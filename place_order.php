@@ -6,54 +6,41 @@
     <title>Document</title>
 </head>
 <body>
-    <?php
+   <?php
 session_start();
-include 'includes/db.php';
+include 'includes/DBConn.php';
 
-$user_id = $_SESSION['user_id'];
+if (!isset($_SESSION['userID']) || empty($_SESSION['cart'])) {
+    header("Location: cart.php");
+    exit();
+}
+
+$userID = $_SESSION['userID'];
 $cart = $_SESSION['cart'];
 
 $total = 0;
 
-/* calculate total */
+/* 1. CALCULATE TOTAL */
+foreach ($cart as $productID => $item) {
 
-foreach($cart as $product_id => $qty){
-    $product = $conn->query(
-        "SELECT * FROM products WHERE id=$product_id"
-    )->fetch_assoc();
-
-    $total += $product['price'] * $qty;
+    $total += $item['price'] * $item['qty'];
 }
 
-/* create order */
+/* 2. INSERT ORDER INTO tblAorder */
+$stmt = $conn->prepare("INSERT INTO tblAorder (userID, total) VALUES (?, ?)");
+$stmt->bind_param("id", $userID, $total);
+$stmt->execute();
 
-$conn->query("
-INSERT INTO orders(user_id,total)
-VALUES('$user_id','$total')
-");
+$orderID = $stmt->insert_id;
 
-$order_id = $conn->insert_id;
+/* 3. OPTIONAL: store order details (only if you later create tblOrderItems)
+   For now we skip this because your DB doesn't have it
+*/
 
-/* insert order items */
-
-foreach($cart as $product_id => $qty){
-
-    $product = $conn->query(
-        "SELECT * FROM products WHERE id=$product_id"
-    )->fetch_assoc();
-
-    $price = $product['price'];
-
-    $conn->query("
-    INSERT INTO order_items(order_id,product_id,quantity,price)
-    VALUES('$order_id','$product_id','$qty','$price')
-    ");
-}
-
-/* clear cart */
-
+/* 4. CLEAR CART */
 unset($_SESSION['cart']);
 
+/* 5. REDIRECT */
 header("Location: profile.php");
 exit();
 ?>

@@ -6,53 +6,68 @@
     <title>Document</title>
 </head>
 <body>
-    <?php
+
+<?php
 session_start();
 include 'includes/DBConn.php';
 
-$message = "";
+$error = "";
 
-$email = "";
-$password = "";
+if (isset($_POST['login'])) {
 
-if(isset($_POST['login'])){
+    $email = $_POST['email'];
+    $password = $_POST['password'];
 
-$email = $_POST['email'];
-$password = $_POST['password'];
+    $sql = "SELECT * FROM tblUser WHERE email = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("s", $email);
+    $stmt->execute();
+    $result = $stmt->get_result();
 
-$sql = "SELECT * FROM tblUser WHERE email=?";
-$stmt = $conn->prepare($sql);
-$stmt->bind_param("s",$email);
-$stmt->execute();
+    if ($result->num_rows > 0) {
 
-$result = $stmt->get_result();
+        $user = $result->fetch_assoc();
 
-if($result->num_rows > 0){
+        if (password_verify($password, $user['password'])) {
 
-$user = $result->fetch_assoc();
+            $_SESSION['userID'] = $user['userID'];
+            $_SESSION['name'] = $user['name'];
 
-if(! $user['verified']){
-$message = "Account waiting for admin verification.";
-}
-else if(password_verify($password,$user['password'])){
+            header("Location: profile.php");
+            exit();
 
-$_SESSION['user_id'] = $user['userID'];
-$_SESSION['name'] = $user['name'];
+        } else {
+            $error = "Invalid email or password";
+        }
 
-header("Location: profile.php");
-exit();
-}
-else{
-$message = "Incorrect password.";
-}
-
-}else{
-$message = "User does not exist.";
-}
+    } else {
+        $error = "Invalid email or password";
+    }
 }
 ?>
 
 <?php include 'includes/header.php'; ?>
+
+<section class="auth-container">
+
+<form method="POST" class="auth-card">
+
+<h2>Login</h2>
+
+<?php if (!empty($error)) echo "<p style='color:red;'>$error</p>"; ?>
+
+<input type="email" name="email" placeholder="Email" required>
+<input type="password" name="password" placeholder="Password" required>
+
+<button type="submit" name="login" class="btn">Login</button>
+
+<p>No account? <a href="register.php">Register</a></p>
+
+</form>
+
+</section>
+
+<?php include 'includes/footer.php'; ?>
 
 <section class="auth-container">
 
