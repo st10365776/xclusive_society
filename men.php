@@ -4,49 +4,36 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
-    <title>Document</title>
+    <title>Men's Collection</title>
 </head>
 <body>
+    <!-- Include navigation header -->
     <?php include 'includes/header.php'; ?>
 
-<section class="page-title">
-    <h1>Men Collection</h1>
-</section>
+    <!-- Page title section -->
+    <section class="page-title">
+        <h1>Men Collection</h1>
+    </section>
 
-<section class="products">
+    <!-- Products grid section -->
+    <section class="products">
 
-    <!-- PRODUCT 1 -->
-    <div class="product">
-        <form action="add_to_cart.php" method="POST">
+        <!-- PRODUCT 1: Casual T-Shirt -->
+        <div class="product">
+            <form action="add_to_cart.php" method="POST">
+                <img src="images/men/greyt.jpg">
+                <h3>X.S Casual T-Shirt</h3>
+                <p>R899</p>
 
-            <img src="images/men/greyt.jpg">
+                <!-- Hidden form fields to pass product data -->
+                <input type="hidden" name="id" value="men1">
+                <input type="hidden" name="name" value="X.S Casual T-Shirt">
+                <input type="hidden" name="price" value="899">
+                <input type="hidden" name="image" value="images/men/greyt.jpg">
 
-            <h3>X.S Casual T-Shirt</h3>
-            <p>R899</p>
-
-            <input type="hidden" name="id" value="men1">
-            <input type="hidden" name="name" value="X.S Casual T-Shirt">
-            <input type="hidden" name="price" value="899">
-            <input type="hidden" name="image" value="images/men/greyt.jpg">
-
-            <button type="submit">Add to Cart</button>
-
-        </form>
-    </div>
-
-    <!-- PRODUCT 2 -->
-    <div class="product">
-        <form action="add_to_cart.php" method="POST">
-
-            <img src="images/men/greent.jpg">
-
-            <h3>X.S Essential Tee</h3>
-            <p>R499</p>
-
-            <input type="hidden" name="id" value="men2">
-            <input type="hidden" name="name" value="X.S Essential Tee">
-            <input type="hidden" name="price" value="499">
-            <input type="hidden" name="image" value="images/men/greent.jpg">
+                <button type="submit">Add to Cart</button>
+            </form>
+        </div>
 
             <button type="submit">Add to Cart</button>
 

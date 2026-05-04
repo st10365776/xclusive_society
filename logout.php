@@ -4,14 +4,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
-    <title>Document</title>
+    <title>Logout</title>
 </head>
 <body>
     <?php
-session_start();
-session_destroy();
+    /**
+     * USER LOGOUT PAGE
+     * ================
+     * Handles user session destruction and redirects to login page.
+     * Clears all session variables and destroys the session.
+     */
+    
+    session_start();
+    // Destroy the entire session
+    session_destroy();
 
-header("Location: login.php");
-?>
+    // Redirect user back to login page
+    header("Location: login.php");
+    ?>
 </body>
 </html>

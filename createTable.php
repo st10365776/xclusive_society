@@ -4,48 +4,68 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
-    <title>Document</title>
+    <title>Setup - Create Database Tables</title>
 </head>
 <body>
     <?php
-include "DBConn.php";
+    /**
+     * CREATE DATABASE TABLES
+     * ======================
+     * Database initialization script that:
+     * 1. Drops existing tblUser table (if it exists)
+     * 2. Creates new tblUser table with proper schema
+     * 3. Loads user data from userData.txt CSV file
+     * 
+     * NOTE: This is a setup/maintenance script. Should only be run once
+     * or when intentionally resetting the user data.
+     */
+    
+    include "DBConn.php";
 
-/* delete table if exists */
-$conn->query("DROP TABLE IF EXISTS tblUser");
+    // Drop the table if it already exists to avoid conflicts
+    $conn->query("DROP TABLE IF EXISTS tblUser");
 
-/* recreate table */
-$sql = "CREATE TABLE tblUser (
-    userID INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(100),
-    email VARCHAR(150),
-    password VARCHAR(255),
-    verified BOOLEAN DEFAULT FALSE,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-)";
+    // Create tblUser table with all necessary columns
+    $sql = "CREATE TABLE tblUser (
+        userID INT AUTO_INCREMENT PRIMARY KEY,
+        name VARCHAR(100),
+        email VARCHAR(150),
+        password VARCHAR(255),
+        verified BOOLEAN DEFAULT FALSE,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )";
 
-$conn->query($sql);
+    // Execute table creation
+    $conn->query($sql);
 
-/* load text file data */
-$file = fopen("userData.txt","r");
+    // Load user data from CSV file (userData.txt)
+    $file = fopen("userData.txt","r");
 
-while(($line = fgetcsv($file)) !== FALSE){
+    // Loop through each line in the CSV file
+    while(($line = fgetcsv($file)) !== FALSE){
 
-    $name = $line[0];
-    $email = $line[1];
-    $password = $line[2];
+        // Extract user data from CSV columns
+        $name = $line[0];
+        $email = $line[1];
+        $password = $line[2];
 
-    $stmt = $conn->prepare(
-        "INSERT INTO tblUser(name,email,password)
-         VALUES (?,?,?)"
-    );
+        // Insert user into database using prepared statement
+        $stmt = $conn->prepare(
+            "INSERT INTO tblUser(name,email,password)
+             VALUES (?,?,?)"
+        );
 
-    $stmt->bind_param("sss",$name,$email,$password);
-    $stmt->execute();
-}
+        // Bind parameters for security
+        $stmt->bind_param("sss",$name,$email,$password);
+        // Execute the insert
+        $stmt->execute();
+    }
 
-fclose($file);
+    // Close the file
+    fclose($file);
 
-echo "tblUser recreated and data loaded!";
-?>
+    // Display success message
+    echo "tblUser recreated and data loaded!";
+    ?>
 </body>
 </html>

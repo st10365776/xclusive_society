@@ -4,38 +4,52 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
-    <title>Document</title>
+    <title>Add to Cart</title>
 </head>
 <body>
    <?php
-session_start();
+   /**
+    * ADD TO CART HANDLER
+    * ===================
+    * Processes product additions to the shopping cart.
+    * Stores cart data in the session ($_SESSION['cart']).
+    * If a product already exists in cart, increments quantity.
+    * Otherwise, adds the product as a new cart item.
+    */
+   
+   session_start();
 
-$product = [
-    "id" => $_POST['id'],
-    "name" => $_POST['name'],
-    "price" => $_POST['price'],
-    "image" => $_POST['image']
-];
+   // Collect product data from form submission
+   $product = [
+       "id" => $_POST['id'],
+       "name" => $_POST['name'],
+       "price" => $_POST['price'],
+       "image" => $_POST['image']
+   ];
 
-$id = $product['id'];
+   $id = $product['id'];
 
-if (!isset($_SESSION['cart'])) {
-    $_SESSION['cart'] = [];
-}
+   // Initialize cart session array if it doesn't exist
+   if (!isset($_SESSION['cart'])) {
+       $_SESSION['cart'] = [];
+   }
 
-if (isset($_SESSION['cart'][$id])) {
-    $_SESSION['cart'][$id]['qty'] += 1;
-} else {
-    $_SESSION['cart'][$id] = [
-        "name" => $product['name'],
-        "price" => $product['price'],
-        "image" => $product['image'],
-        "qty" => 1
-    ];
-}
+   // If product already in cart, increment quantity
+   if (isset($_SESSION['cart'][$id])) {
+       $_SESSION['cart'][$id]['qty'] += 1;
+   } else {
+       // Otherwise add product as new item with quantity 1
+       $_SESSION['cart'][$id] = [
+           "name" => $product['name'],
+           "price" => $product['price'],
+           "image" => $product['image'],
+           "qty" => 1
+       ];
+   }
 
-header("Location: cart.php");
-exit();
-?>
+   // Redirect to cart page to view updated cart
+   header("Location: cart.php");
+   exit();
+   ?>
 </body>
 </html>

@@ -8,76 +8,83 @@
 </head>
 <body>
     <?php
-session_start();
-include 'includes/header.php';
+    /**
+     * SHOPPING CART PAGE
+     * ==================
+     * Displays all items currently in the user's shopping cart.
+     * Shows item details including price, quantity, and subtotal.
+     * Allows users to remove items or proceed to checkout.
+     */
+    
+    session_start();
+    include 'includes/header.php';
+    
+    // Get cart from session, default to empty array if not set
+    $cart = $_SESSION['cart'] ?? [];
+    $total = 0;
+    ?>
 
-$cart = $_SESSION['cart'] ?? [];
-$total = 0;
-?>
+    <section class="cart-page">
+        <h1>Your Bag</h1>
 
-<section class="cart-page">
+        <div class="cart-wrapper">
+            <div class="cart-items">
+                
+                <!-- Display message if cart is empty -->
+                <?php if (empty($cart)): ?>
+                    <p>Your cart is empty.</p>
+                
+                <!-- Display cart items -->
+                <?php else: ?>
+                    <?php foreach ($cart as $id => $item): ?>
+                        <!-- Calculate subtotal for this item -->
+                        <?php $subtotal = $item['price'] * $item['qty']; $total += $subtotal; ?>
 
-<h1>Your Bag</h1>
+                        <div class="cart-card">
+                            <!-- Product image -->
+                            <img src="<?php echo $item['image']; ?>">
 
-<div class="cart-wrapper">
+                            <div class="cart-info">
+                                <!-- Product name -->
+                                <h3><?php echo $item['name']; ?></h3>
+                                <!-- Product price -->
+                                <p>R<?php echo $item['price']; ?></p>
 
-<div class="cart-items">
+                                <!-- Item quantity -->
+                                <p>Qty: <?php echo $item['qty']; ?></p>
 
-<?php if (empty($cart)): ?>
-    <p>Your cart is empty.</p>
-<?php else: ?>
+                                <!-- Subtotal for this item -->
+                                <p>Subtotal: R<?php echo $subtotal; ?></p>
 
-<?php foreach ($cart as $id => $item): ?>
+                                <!-- Button to remove item from cart -->
+                                <a href="remove-from-cart.php?id=<?php echo $id; ?>" 
+                                   class="remove-btn"
+                                   onclick="return confirm('Remove this item from cart?')">
+                                   Remove
+                                </a>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                <?php endif; ?>
 
-<?php $subtotal = $item['price'] * $item['qty']; $total += $subtotal; ?>
+            </div>
 
-<div class="cart-card">
+            <!-- Order summary sidebar -->
+            <div class="cart-summary">
+                <h2>Order Summary</h2>
 
-<img src="<?php echo $item['image']; ?>">
+                <!-- Display total cart value -->
+                <p>Total: R<?php echo $total; ?></p>
 
-<div class="cart-info">
+                <!-- Form to proceed to checkout -->
+                <form action="place_order.php" method="POST">
+                    <button class="checkout-btn">Place Order</button>
+                </form>
+            </div>
+        </div>
+    </section>
 
-<h3><?php echo $item['name']; ?></h3>
-<p>R<?php echo $item['price']; ?></p>
-
-<p>Qty: <?php echo $item['qty']; ?></p>
-
-<p>Subtotal: R<?php echo $subtotal; ?></p>
-
-<!-- ✅ REMOVE BUTTON ADDED HERE -->
-<a href="remove-from-cart.php?id=<?php echo $id; ?>" 
-   class="remove-btn"
-   onclick="return confirm('Remove this item from cart?')">
-   Remove
-</a>
-
-</div>
-
-</div>
-
-<?php endforeach; ?>
-
-<?php endif; ?>
-
-</div>
-
-<!-- SUMMARY -->
-<div class="cart-summary">
-
-<h2>Order Summary</h2>
-
-<p>Total: R<?php echo $total; ?></p>
-
-<form action="place_order.php" method="POST">
-    <button class="checkout-btn">Place Order</button>
-</form>
-
-</div>
-
-</div>
-
-</section>
-
-<?php include 'includes/footer.php'; ?>
+    <!-- Include footer -->
+    <?php include 'includes/footer.php'; ?>
 </body>
 </html>

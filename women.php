@@ -4,109 +4,120 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
-    <title>Document</title>
+    <title>Women's Collection</title>
 </head>
 <body>
+    <!-- Include navigation header -->
     <?php include 'includes/header.php'; ?>
 
-<section class="page-title">
-    <h1>Women Collection</h1>
-</section>
+    <!-- Page title section -->
+    <section class="page-title">
+        <h1>Women Collection</h1>
+    </section>
 
-<section class="products">
+    <!-- Products grid section -->
+    <section class="products">
 
-    <div class="product">
-        <form action="add_to_cart.php" method="POST">
-            <img src="images/women/1.jpg">
-            <h3>X.S Button Dress</h3>
-            <p>R380</p>
+        <!-- PRODUCT 1: Button Dress -->
+        <div class="product">
+            <form action="add_to_cart.php" method="POST">
+                <img src="images/women/1.jpg">
+                <h3>X.S Button Dress</h3>
+                <p>R380</p>
 
-            <input type="hidden" name="id" value="women1">
-            <input type="hidden" name="name" value="X.S Button Dress">
-            <input type="hidden" name="price" value="380">
-            <input type="hidden" name="image" value="images/women/1.jpg">
+                <!-- Hidden form fields to pass product data -->
+                <input type="hidden" name="id" value="women1">
+                <input type="hidden" name="name" value="X.S Button Dress">
+                <input type="hidden" name="price" value="380">
+                <input type="hidden" name="image" value="images/women/1.jpg">
 
-            <button type="submit">Add to Cart</button>
-        </form>
-    </div>
+                <button type="submit">Add to Cart</button>
+            </form>
+        </div>
 
-    <div class="product">
-        <form action="add_to_cart.php" method="POST">
-            <img src="images/women/2.jpg">
-            <h3>X.S Red Long Dress</h3>
-            <p>R1899</p>
+        <!-- PRODUCT 2: Red Long Dress -->
+        <div class="product">
+            <form action="add_to_cart.php" method="POST">
+                <img src="images/women/2.jpg">
+                <h3>X.S Red Long Dress</h3>
+                <p>R1899</p>
 
-            <input type="hidden" name="id" value="women2">
-            <input type="hidden" name="name" value="X.S Red Long Dress">
-            <input type="hidden" name="price" value="1899">
-            <input type="hidden" name="image" value="images/women/2.jpg">
+                <input type="hidden" name="id" value="women2">
+                <input type="hidden" name="name" value="X.S Red Long Dress">
+                <input type="hidden" name="price" value="1899">
+                <input type="hidden" name="image" value="images/women/2.jpg">
 
-            <button type="submit">Add to Cart</button>
-        </form>
-    </div>
+                <button type="submit">Add to Cart</button>
+            </form>
+        </div>
 
-    <div class="product">
-        <form action="add_to_cart.php" method="POST">
-            <img src="images/women/3.jpg">
-            <h3>X.S Black Long Dress</h3>
-            <p>R1899</p>
+        <!-- PRODUCT 3: Black Long Dress -->
+        <div class="product">
+            <form action="add_to_cart.php" method="POST">
+                <img src="images/women/3.jpg">
+                <h3>X.S Black Long Dress</h3>
+                <p>R1899</p>
 
-            <input type="hidden" name="id" value="women3">
-            <input type="hidden" name="name" value="X.S Black Long Dress">
-            <input type="hidden" name="price" value="1899">
-            <input type="hidden" name="image" value="images/women/3.jpg">
+                <input type="hidden" name="id" value="women3">
+                <input type="hidden" name="name" value="X.S Black Long Dress">
+                <input type="hidden" name="price" value="1899">
+                <input type="hidden" name="image" value="images/women/3.jpg">
 
-            <button type="submit">Add to Cart</button>
-        </form>
-    </div>
+                <button type="submit">Add to Cart</button>
+            </form>
+        </div>
 
-    <div class="product">
-        <form action="add_to_cart.php" method="POST">
-            <img src="images/women/4.jpg">
-            <h3>X.S Long Sleeve Dress</h3>
-            <p>R2499</p>
+        <!-- PRODUCT 4: Long Sleeve Dress -->
+        <div class="product">
+            <form action="add_to_cart.php" method="POST">
+                <img src="images/women/4.jpg">
+                <h3>X.S Long Sleeve Dress</h3>
+                <p>R2499</p>
 
-            <input type="hidden" name="id" value="women4">
-            <input type="hidden" name="name" value="X.S Long Sleeve Dress">
-            <input type="hidden" name="price" value="2499">
-            <input type="hidden" name="image" value="images/women/4.jpg">
+                <input type="hidden" name="id" value="women4">
+                <input type="hidden" name="name" value="X.S Long Sleeve Dress">
+                <input type="hidden" name="price" value="2499">
+                <input type="hidden" name="image" value="images/women/4.jpg">
 
-            <button type="submit">Add to Cart</button>
-        </form>
-    </div>
+                <button type="submit">Add to Cart</button>
+            </form>
+        </div>
 
-    <div class="product">
-        <form action="add_to_cart.php" method="POST">
-            <img src="images/women/5.jpg">
-            <h3>X.S Wrap Dress</h3>
-            <p>R1399</p>
+        <!-- PRODUCT 5: Wrap Dress -->
+        <div class="product">
+            <form action="add_to_cart.php" method="POST">
+                <img src="images/women/5.jpg">
+                <h3>X.S Wrap Dress</h3>
+                <p>R1399</p>
 
-            <input type="hidden" name="id" value="women5">
-            <input type="hidden" name="name" value="X.S Wrap Dress">
-            <input type="hidden" name="price" value="1399">
-            <input type="hidden" name="image" value="images/women/5.jpg">
+                <input type="hidden" name="id" value="women5">
+                <input type="hidden" name="name" value="X.S Wrap Dress">
+                <input type="hidden" name="price" value="1399">
+                <input type="hidden" name="image" value="images/women/5.jpg">
 
-            <button type="submit">Add to Cart</button>
-        </form>
-    </div>
+                <button type="submit">Add to Cart</button>
+            </form>
+        </div>
 
-    <div class="product">
-        <form action="add_to_cart.php" method="POST">
-            <img src="images/women/6.jpg">
-            <h3>X.S Midi Dress</h3>
-            <p>R699</p>
+        <!-- PRODUCT 6: Midi Dress -->
+        <div class="product">
+            <form action="add_to_cart.php" method="POST">
+                <img src="images/women/6.jpg">
+                <h3>X.S Midi Dress</h3>
+                <p>R699</p>
 
-            <input type="hidden" name="id" value="women6">
-            <input type="hidden" name="name" value="X.S Midi Dress">
-            <input type="hidden" name="price" value="699">
-            <input type="hidden" name="image" value="images/women/6.jpg">
+                <input type="hidden" name="id" value="women6">
+                <input type="hidden" name="name" value="X.S Midi Dress">
+                <input type="hidden" name="price" value="699">
+                <input type="hidden" name="image" value="images/women/6.jpg">
 
-            <button type="submit">Add to Cart</button>
-        </form>
-    </div>
+                <button type="submit">Add to Cart</button>
+            </form>
+        </div>
 
-</section>
+    </section>
 
-<?php include 'includes/footer.php'; ?>
+    <!-- Include footer -->
+    <?php include 'includes/footer.php'; ?>
 </body>
 </html>

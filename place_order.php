@@ -4,46 +4,52 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
-    <title>Document</title>
+    <title>Confirm Order</title>
 </head>
 <body>
    <?php
-session_start();
-include 'includes/DBConn.php';
+   /**
+    * PLACE ORDER - ORDER CONFIRMATION PAGE
+    * =====================================
+    * Processes the final order placement.
+    * Validates user is logged in and has cart items.
+    * Calculates total and creates order record in database.
+    * Clears cart and redirects to profile.
+    */
+   
+   session_start();
+   include 'includes/DBConn.php';
 
-if (!isset($_SESSION['userID']) || empty($_SESSION['cart'])) {
-    header("Location: cart.php");
-    exit();
-}
+   // Ensure user is logged in and has items to checkout
+   if (!isset($_SESSION['userID']) || empty($_SESSION['cart'])) {
+       header("Location: cart.php");
+       exit();
+   }
 
-$userID = $_SESSION['userID'];
-$cart = $_SESSION['cart'];
+   $userID = $_SESSION['userID'];
+   $cart = $_SESSION['cart'];
 
-$total = 0;
+   $total = 0;
 
-/* 1. CALCULATE TOTAL */
-foreach ($cart as $productID => $item) {
+   // Calculate total order amount
+   foreach ($cart as $productID => $item) {
+       $total += $item['price'] * $item['qty'];
+   }
 
-    $total += $item['price'] * $item['qty'];
-}
+   // Insert order into database with calculated total
+   $stmt = $conn->prepare("INSERT INTO tblAorder (userID, total) VALUES (?, ?)");
+   $stmt->bind_param("id", $userID, $total);
+   $stmt->execute();
 
-/* 2. INSERT ORDER INTO tblAorder */
-$stmt = $conn->prepare("INSERT INTO tblAorder (userID, total) VALUES (?, ?)");
-$stmt->bind_param("id", $userID, $total);
-$stmt->execute();
+   // Get the newly created order ID
+   $orderID = $stmt->insert_id;
 
-$orderID = $stmt->insert_id;
+   // Clear cart from session after successful order placement
+   unset($_SESSION['cart']);
 
-/* 3. OPTIONAL: store order details (only if you later create tblOrderItems)
-   For now we skip this because your DB doesn't have it
-*/
-
-/* 4. CLEAR CART */
-unset($_SESSION['cart']);
-
-/* 5. REDIRECT */
-header("Location: profile.php");
-exit();
-?>
+   // Redirect to profile to view order confirmation
+   header("Location: profile.php");
+   exit();
+   ?>
 </body>
 </html>

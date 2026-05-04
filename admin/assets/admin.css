@@ -1,0 +1,152 @@
+/**
+ * ==========================================================
+ * ADMIN PANEL STYLESHEET
+ * ==========================================================
+ * 
+ * CSS styles for the Xclusive Society admin control panel.
+ * Includes:
+ * - Admin login page styling
+ * - Dashboard layout (sidebar + content)
+ * - Admin data tables
+ * - Action buttons (verify, delete)
+ * 
+ * ===========================================================
+ */
+
+/* ============================= */
+/* GLOBAL STYLES */
+/* ============================= */
+
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background: #f4f6f9;  /* Light gray background */
+}
+
+/* ============================= */
+/* ADMIN LOGIN PAGE */
+/* ============================= */
+
+/* Login page container - full screen centered */
+.login-container {
+    height: 100vh;  /* Full viewport height */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Login form card */
+.login-card {
+    background: white;
+    padding: 40px;
+    width: 350px;
+    border-radius: 10px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Login card title */
+.login-card h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* Form input fields */
+input {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+/* Submit button */
+button {
+    width: 100%;
+    padding: 12px;
+    background: black;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+/* Button hover effect */
+button:hover {
+    background: #333;
+}
+
+/* ============================= */
+/* ADMIN DASHBOARD LAYOUT */
+/* ============================= */
+
+/* Main dashboard container - two column layout */
+.admin-layout {
+    display: flex;
+}
+
+/* Left sidebar navigation */
+.sidebar {
+    width: 220px;
+    height: 100vh;  /* Full viewport height */
+    background: black;  /* Dark background */
+    color: white;
+    padding: 20px;
+}
+
+/* Sidebar navigation links */
+.sidebar a {
+    display: block;
+    color: white;
+    text-decoration: none;
+    padding: 10px 0;
+}
+
+/* Sidebar link hover effect */
+.sidebar a:hover {
+    color: #ccc;  /* Lighter color on hover */
+}
+
+/* Main content area */
+.content {
+    flex: 1;  /* Takes remaining space */
+    padding: 30px;
+}
+
+/* Content card styling */
+.card {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+/* ============================= */
+/* DATA TABLES */
+/* ============================= */
+
+/* Table styling */
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+/* Table headers and cells */
+th, td {
+    padding: 12px;
+    border-bottom: 1px solid #ddd;
+}
+
+/* ============================= */
+/* ACTION BUTTONS */
+/* ============================= */
+
+/* Verify button - green */
+.verify {
+    background: green;
+}
+
+/* Delete button - red */
+.delete {
+    background: red;
+}
