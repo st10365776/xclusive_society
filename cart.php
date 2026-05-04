@@ -81,7 +81,7 @@
 <span>R1298</span>
 </div>
 
-<a href="#" class="checkout-btn">Checkout</a>
+<a href="checkout.php" class="checkout-btn">Checkout</a>
 
 </div>
 
