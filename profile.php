@@ -8,13 +8,7 @@
 </head>
 <body>
    <?php
-   /**
-    * USER PROFILE PAGE
-    * =================
-    * Displays user account information and order history.
-    * Only accessible to logged-in users (checks for userID in session).
-    * Shows all orders with their status and allows users to cancel orders.
-    */
+   
    
    session_start();
    include 'includes/DBConn.php';
@@ -82,7 +76,7 @@
                        <!-- Order ID and status -->
                        <div class="order-header">
                            <span>Order #<?= $order['orderID']; ?></span>
-                           <span class="status">Pending</span>
+                           <span class="status"><?= htmlspecialchars($order['status']); ?></span>
                        </div>
 
                        <!-- Order total amount -->

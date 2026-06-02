@@ -89,6 +89,7 @@ cursor:pointer;
 
 <a href="dashboard.php">Dashboard</a>
 <a href="customers.php">Customers</a>
+<a href="products.php">Products</a>
 <a href="logout.php" class="logout">Logout</a>
 </div>
 

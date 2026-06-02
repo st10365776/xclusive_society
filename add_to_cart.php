@@ -8,26 +8,31 @@
 </head>
 <body>
    <?php
-   /**
-    * ADD TO CART HANDLER
-    * ===================
-    * Processes product additions to the shopping cart.
-    * Stores cart data in the session ($_SESSION['cart']).
-    * If a product already exists in cart, increments quantity.
-    * Otherwise, adds the product as a new cart item.
-    */
+   
    
    session_start();
+   include 'includes/DBConn.php';
 
-   // Collect product data from form submission
-   $product = [
-       "id" => $_POST['id'],
-       "name" => $_POST['name'],
-       "price" => $_POST['price'],
-       "image" => $_POST['image']
-   ];
+   if (!isset($_POST['id'])) {
+       header("Location: cart.php");
+       exit();
+   }
 
-   $id = $product['id'];
+   $id = $_POST['id'];
+
+   $stmt = $conn->prepare(
+       "SELECT productCode, productName, price, imagePath
+        FROM tblClothes
+        WHERE productCode = ? AND isActive = 1"
+   );
+   $stmt->bind_param("s", $id);
+   $stmt->execute();
+   $product = $stmt->get_result()->fetch_assoc();
+
+   if (!$product) {
+       header("Location: cart.php");
+       exit();
+   }
 
    // Initialize cart session array if it doesn't exist
    if (!isset($_SESSION['cart'])) {
@@ -40,9 +45,9 @@
    } else {
        // Otherwise add product as new item with quantity 1
        $_SESSION['cart'][$id] = [
-           "name" => $product['name'],
+           "name" => $product['productName'],
            "price" => $product['price'],
-           "image" => $product['image'],
+           "image" => $product['imagePath'],
            "qty" => 1
        ];
    }

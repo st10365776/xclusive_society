@@ -7,13 +7,6 @@
 </head>
 <body>
     <?php
-    /**
-     * ADD NEW USER/CUSTOMER
-     * ====================
-     * Allows admin to create new user accounts.
-     * Inserts new user into tblUser with verified=1 (auto-approved by admin).
-     * Redirects to manage_users.php after successful creation.
-     */
     
     // Check if user is authenticated admin
     include 'admin_auth.php';
@@ -24,8 +17,8 @@
         // Get form data
         $name = $_POST['name'];
         $email = $_POST['email'];
-        // Hash password with MD5 (legacy method)
-        $password = md5($_POST['password']);
+        // Hash password securely before saving
+        $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
 
         // Prepare insert statement
         $stmt = $conn->prepare(

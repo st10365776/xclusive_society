@@ -6,23 +6,35 @@ $error = "";
 
 if(isset($_POST['login'])){
 
-    $username = trim($_POST['username']);
-    $password = md5($_POST['password']);
+    $email = trim($_POST['email']);
+    $password = $_POST['password'];
 
-    $sql = "SELECT * FROM tblAdmin WHERE username=? AND password=?";
+    $emailColumn = "adminEmail";
+    $columnCheck = $conn->query("SHOW COLUMNS FROM tblAdmin LIKE 'adminEmail'");
+    if (!$columnCheck || $columnCheck->num_rows === 0) {
+        $emailColumn = "username";
+    }
+
+    $sql = "SELECT * FROM tblAdmin WHERE $emailColumn=?";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("ss",$username,$password);
+    $stmt->bind_param("s",$email);
     $stmt->execute();
 
     $result = $stmt->get_result();
 
     if($result->num_rows === 1){
+        $admin = $result->fetch_assoc();
+        $storedPassword = $admin['password'];
+        $validPassword = password_verify($password, $storedPassword) || md5($password) === $storedPassword;
 
-        $_SESSION['admin'] = true;
-        $_SESSION['admin_username'] = $username;
+        if ($validPassword) {
+            $_SESSION['admin'] = true;
+            $_SESSION['adminID'] = $admin['adminID'];
+            $_SESSION['admin_email'] = $email;
 
-        header("Location: dashboard.php");
-        exit();
+            header("Location: dashboard.php");
+            exit();
+        }
     }
 
     $error = "Invalid Login";
@@ -84,7 +96,7 @@ cursor:pointer;
 <?php endif; ?>
 
 <form method="POST">
-<input name="username" placeholder="Username" required>
+<input name="email" type="email" placeholder="Admin Email" required>
 <input type="password" name="password" placeholder="Password" required>
 <button name="login">Login</button>
 </form>

@@ -21,12 +21,13 @@ session_start();
 include 'includes/DBConn.php';
 
 $error = "";
+$email = "";
 
 // Process login form submission
 if (isset($_POST['login'])) {
 
     // Get email and password from form
-    $email = $_POST['email'];
+    $email = trim($_POST['email']);
     $password = $_POST['password'];
 
     // Query database for user with matching email
@@ -41,16 +42,20 @@ if (isset($_POST['login'])) {
 
         $user = $result->fetch_assoc();
 
-        // Verify password against stored hash
-        if (password_verify($password, $user['password'])) {
+        // Verify password against stored hash, with support for older MD5 rows
+        if (password_verify($password, $user['password']) || md5($password) === $user['password']) {
 
-            // Set session variables on successful login
-            $_SESSION['userID'] = $user['userID'];
-            $_SESSION['name'] = $user['name'];
+            if ((int)$user['verified'] !== 1) {
+                $error = "Your account is waiting for admin verification.";
+            } else {
+                // Set session variables on successful login
+                $_SESSION['userID'] = $user['userID'];
+                $_SESSION['name'] = $user['name'];
 
-            // Redirect to user profile page
-            header("Location: profile.php");
-            exit();
+                // Redirect to user profile page
+                header("Location: profile.php");
+                exit();
+            }
 
         } else {
             $error = "Invalid email or password";
@@ -75,7 +80,7 @@ if (isset($_POST['login'])) {
         <!-- Display error message if login failed -->
         <?php if (!empty($error)) echo "<p style='color:red;'>$error</p>"; ?>
 
-        <input type="email" name="email" placeholder="Email" required>
+        <input type="email" name="email" placeholder="Email" value="<?= htmlspecialchars($email); ?>" required>
         <input type="password" name="password" placeholder="Password" required>
 
         <button type="submit" name="login" class="btn">Login</button>

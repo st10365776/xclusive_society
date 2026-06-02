@@ -8,14 +8,7 @@
 </head>
 <body>
     <?php
-    /**
-     * SHOPPING CART PAGE
-     * ==================
-     * Displays all items currently in the user's shopping cart.
-     * Shows item details including price, quantity, and subtotal.
-     * Allows users to remove items or proceed to checkout.
-     */
-    
+   
     session_start();
     include 'includes/header.php';
     
@@ -42,22 +35,22 @@
 
                         <div class="cart-card">
                             <!-- Product image -->
-                            <img src="<?php echo $item['image']; ?>">
+                            <img src="<?php echo htmlspecialchars($item['image']); ?>" alt="<?php echo htmlspecialchars($item['name']); ?>">
 
                             <div class="cart-info">
                                 <!-- Product name -->
-                                <h3><?php echo $item['name']; ?></h3>
+                                <h3><?php echo htmlspecialchars($item['name']); ?></h3>
                                 <!-- Product price -->
-                                <p>R<?php echo $item['price']; ?></p>
+                                <p>R<?php echo htmlspecialchars($item['price']); ?></p>
 
                                 <!-- Item quantity -->
-                                <p>Qty: <?php echo $item['qty']; ?></p>
+                                <p>Qty: <?php echo htmlspecialchars($item['qty']); ?></p>
 
                                 <!-- Subtotal for this item -->
                                 <p>Subtotal: R<?php echo $subtotal; ?></p>
 
                                 <!-- Button to remove item from cart -->
-                                <a href="remove-from-cart.php?id=<?php echo $id; ?>" 
+                                <a href="remove-from-cart.php?id=<?php echo urlencode($id); ?>"
                                    class="remove-btn"
                                    onclick="return confirm('Remove this item from cart?')">
                                    Remove
@@ -74,7 +67,7 @@
                 <h2>Order Summary</h2>
 
                 <!-- Display total cart value -->
-                <p>Total: R<?php echo $total; ?></p>
+                <p>Total: R<?php echo number_format($total, 2); ?></p>
 
                 <!-- Form to proceed to checkout -->
                 <form action="place_order.php" method="POST">

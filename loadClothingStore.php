@@ -9,31 +9,22 @@
 <body>
 
 <?php
-/**
- * RESET/INITIALIZE DATABASE
- * =========================
- * This is a database maintenance script that drops and recreates all tables.
- * Useful for:
- * - Testing and development
- * - Resetting the database to a clean state
- * - Removing all user, order, clothing, and admin data
- * 
- * NOTE: USE WITH CAUTION - This will delete all data in the database!
- */
 
-include "DBConn.php";
+include "includes/DBConn.php";
 
 // Drop all existing tables in order (to avoid foreign key constraint issues)
+$conn->query("SET FOREIGN_KEY_CHECKS = 0");
+$conn->query("DROP TABLE IF EXISTS tblOrderItems");  // Order item details
 $conn->query("DROP TABLE IF EXISTS tblAorder");      // Orders table
 $conn->query("DROP TABLE IF EXISTS tblClothes");     // Clothes/Products table
 $conn->query("DROP TABLE IF EXISTS tblUser");        // Users table
 $conn->query("DROP TABLE IF EXISTS tblAdmin");       // Admin users table
+$conn->query("SET FOREIGN_KEY_CHECKS = 1");
 
 // Display success message
 echo "Tables deleted successfully";
 
-// TODO: Add code here to recreate tables with proper schema if needed
-// You would add CREATE TABLE statements here to re-initialize the database
+echo "<br><a href='createTable.php'>Recreate tables and reload products</a>";
 
 ?>
 

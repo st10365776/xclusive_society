@@ -7,16 +7,6 @@
 </head>
 <body>
     <?php
-    /**
-     * CHECKOUT PAGE
-     * ==============
-     * Finalizes the order by:
-     * 1. Validating user is logged in and has items in cart
-     * 2. Calculating total cart value
-     * 3. Inserting order record into tblAorder database table
-     * 4. Clearing the cart session
-     * 5. Redirecting to user profile
-     */
     
     session_start();
     include 'includes/DBConn.php';
@@ -45,20 +35,18 @@
     // Get the auto-generated order ID
     $orderID = $stmt->insert_id;
 
-    // Step 3: Optional - store individual order items (if tblOrderItems table exists)
+    // Step 3: Store individual order items
+    $stmt2 = $conn->prepare("
+        INSERT INTO tblOrderItems (orderID, productCode, productName, quantity, price)
+        VALUES (?, ?, ?, ?, ?)
+    ");
+
     foreach ($cart as $productID => $item) {
         $qty = $item['qty'];
         $price = $item['price'];
-
-        // Uncomment below if you create tblOrderItems table:
-        /*
-        $stmt2 = $conn->prepare("
-            INSERT INTO tblOrderItems (orderID, productID, quantity, price)
-            VALUES (?, ?, ?, ?)
-        ");
-        $stmt2->bind_param("iiid", $orderID, $productID, $qty, $price);
+        $name = $item['name'];
+        $stmt2->bind_param("issid", $orderID, $productID, $name, $qty, $price);
         $stmt2->execute();
-        */
     }
 
     // Step 4: Clear cart from session

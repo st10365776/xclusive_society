@@ -68,14 +68,16 @@ border-radius:10px;
 
 <a href="dashboard.php">Dashboard</a>
 <a href="customers.php">Customers</a>
+<a href="products.php">Products</a>
 <a href="logout.php" class="logout">Logout</a>
 </div>
 
 <div class="content">
 
 <div class="card">
-<h1>Welcome <?= $_SESSION['admin_username']; ?> 👑</h1>
+<h1>Welcome <?= htmlspecialchars($_SESSION['admin_email'] ?? 'Admin'); ?> 👑</h1>
 <p>Xclusive Society Admin Dashboard</p>
+<p><a href="products.php" style="color:#ff3c3c;">Add or manage products</a></p>
 </div>
 
 </div>

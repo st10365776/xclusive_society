@@ -8,14 +8,7 @@
 </head>
 <body>
    <?php
-   /**
-    * PLACE ORDER - ORDER CONFIRMATION PAGE
-    * =====================================
-    * Processes the final order placement.
-    * Validates user is logged in and has cart items.
-    * Calculates total and creates order record in database.
-    * Clears cart and redirects to profile.
-    */
+   
    
    session_start();
    include 'includes/DBConn.php';
@@ -43,6 +36,19 @@
 
    // Get the newly created order ID
    $orderID = $stmt->insert_id;
+
+   $itemStmt = $conn->prepare(
+       "INSERT INTO tblOrderItems (orderID, productCode, productName, quantity, price)
+        VALUES (?, ?, ?, ?, ?)"
+   );
+
+   foreach ($cart as $productCode => $item) {
+       $qty = $item['qty'];
+       $price = $item['price'];
+       $name = $item['name'];
+       $itemStmt->bind_param("issid", $orderID, $productCode, $name, $qty, $price);
+       $itemStmt->execute();
+   }
 
    // Clear cart from session after successful order placement
    unset($_SESSION['cart']);
