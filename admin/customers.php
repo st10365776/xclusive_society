@@ -128,6 +128,9 @@ cursor:pointer;
 </a>
 <?php endif; ?>
 
+<a href="edit_user.php?id=<?= $user['userID'] ?>">
+    <button>Edit</button>
+</a>
 <a href="delete_user.php?id=<?= $user['userID'] ?>"
 onclick="return confirm('Delete user?')">
 <button class="delete">Delete</button>

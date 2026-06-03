@@ -67,3 +67,40 @@
         </div>
 
     </nav>
+        <?php
+
+$notificationCount = 0;
+
+if(isset($_SESSION['userID'])){
+
+    $uid = $_SESSION['userID'];
+
+    $msgQuery = $conn->prepare("
+        SELECT COUNT(*) as total
+        FROM tblMessages
+        WHERE receiverID = ?
+        AND isRead = 0
+    ");
+
+    $msgQuery->bind_param("i", $uid);
+    $msgQuery->execute();
+
+    $result = $msgQuery->get_result()->fetch_assoc();
+
+    $notificationCount = $result['total'];
+}
+?>
+
+<a href="messages.php" class="notification-bell">
+
+🔔
+
+<?php if($notificationCount > 0): ?>
+<span class="notif-count">
+<?= $notificationCount ?>
+</span>
+<?php endif; ?>
+
+</a>
+</body>
+</html>

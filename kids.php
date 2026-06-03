@@ -26,5 +26,14 @@
     </section>
     <!-- Include footer -->
     <?php include 'includes/footer.php'; ?>
+    <script>
+
+function confirmAddToCart(price){
+
+    return confirm("Add this item to cart for R" + price + "?");
+
+}
+
+</script>
 </body>
 </html>

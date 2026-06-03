@@ -39,14 +39,39 @@
            $user = $stmt->get_result()->fetch_assoc();
            ?>
 
-           <!-- Display welcome message with user's name -->
-           <h2>Welcome, <?= htmlspecialchars($user['name']); ?> 👋</h2>
-           <!-- Display user's email -->
-           <p>Email: <?= htmlspecialchars($user['email']); ?></p>
+           <!-- Welcome message -->
+<h2>Welcome, <?= htmlspecialchars($user['name']); ?> 👋</h2>
 
-           <!-- Logout button -->
-           <a href="logout.php" class="logout">Logout</a>
+<p class="profile-email">
+    <?= htmlspecialchars($user['email']); ?>
+</p>
 
+<h3>User Details</h3>
+
+<table class="profile-table">
+
+    <tr>
+        <th>Column Name</th>
+        <th>Value</th>
+    </tr>
+
+    <?php foreach($user as $column => $value): ?>
+
+        <?php if($column == 'password') continue; ?>
+
+        <tr>
+            <td><?= htmlspecialchars($column); ?></td>
+            <td><?= htmlspecialchars($value); ?></td>
+        </tr>
+
+    <?php endforeach; ?>
+
+</table>
+
+<a href="logout.php" class="logout">Logout</a>
+<a href="seller_submission.php" class="sell-btn">
+    Sell Product
+</a>
        </div>
 
        <!-- ORDERS SECTION -->

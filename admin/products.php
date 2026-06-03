@@ -191,6 +191,8 @@ th,td{padding:12px;border-bottom:1px solid #333;text-align:left;vertical-align:t
 <a href="dashboard.php">Dashboard</a>
 <a href="customers.php">Customers</a>
 <a href="products.php">Products</a>
+<a href="seller_submissions.php">Seller Submissions</a>
+<a href="message_user.php?id=<?= $row['userID'] ?>">Message Seller</a>
 <a href="logout.php" class="logout">Logout</a>
 </div>
 
