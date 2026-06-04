@@ -39,17 +39,24 @@ if(!$product){
 
 /*
 |--------------------------------------------------------------------------
-| INSERT INTO tblClothes
+| GENERATE PRODUCT CODE
 |--------------------------------------------------------------------------
 */
 
-$category = "men"; // default category
+$productCode = "PRD" . time();
+
+/*
+|--------------------------------------------------------------------------
+| INSERT INTO tblClothes
+|--------------------------------------------------------------------------
+*/
 
 $isActive = 1;
 
 $stmt2 = $conn->prepare("
     INSERT INTO tblClothes
     (
+        productCode,
         productName,
         price,
         category,
@@ -57,14 +64,15 @@ $stmt2 = $conn->prepare("
         description,
         isActive
     )
-    VALUES (?, ?, ?, ?, ?, ?)
+    VALUES (?, ?, ?, ?, ?, ?, ?)
 ");
 
 $stmt2->bind_param(
-    "sdsssi",
+    "ssdsssi",
+    $productCode,
     $product['itemName'],
     $product['askingPrice'],
-    $category,
+    $product['category'],
     $product['imagePath'],
     $product['description'],
     $isActive

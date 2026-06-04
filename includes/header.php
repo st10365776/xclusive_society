@@ -1,106 +1,137 @@
-<!-- 
-    ==========================================
-    SITE NAVIGATION HEADER
-    ==========================================
-    
-    This is the main navigation bar displayed on all pages.
-    Includes:
-    - Logo and site branding
-    - Main navigation links
-    - Shopping cart icon
-    - User profile and login links
-    - Admin panel access
-    
-    This file is included at the top of all pages.
--->
+<?php
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Xclusive Society</title>
+if(session_status() === PHP_SESSION_NONE){
+    session_start();
+}
 
-    <!-- Link to main stylesheet -->
-    <link rel="stylesheet" href="css/style.css">
+require_once __DIR__ . '/DBConn.php';
 
-    <!-- Import Poppins font family from Google Fonts for modern typography -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
-</head>
+/*
+|--------------------------------------------------------------------------
+| USER NOTIFICATIONS
+|--------------------------------------------------------------------------
+*/
 
-<body>
-
-    <!-- Main navigation bar -->
-    <nav class="navbar">
-
-        <!-- Logo section - links back to home page -->
-        <div class="logo">
-            <a href="index.php">
-                <img src="images/logo.png" alt="Xclusive Society Logo">
-            </a>
-        </div>
-
-        <!-- Main navigation links -->
-        <ul class="nav-links">
-            <!-- New/Featured products -->
-            <li><a href="new.php">New</a></li>
-            <!-- Men's clothing category -->
-            <li><a href="men.php">Men</a></li>
-            <!-- Women's clothing category -->
-            <li><a href="women.php">Women</a></li>
-            <!-- Kids' clothing category -->
-            <li><a href="kids.php">Kids</a></li>
-            <!-- Contact page -->
-            <li><a href="contact.php">Contact Us</a></li>
-        </ul>
-
-        <!-- User action icons and links -->
-        <div class="icons">
-            <!-- Shopping cart icon - links to cart page -->
-            <a href="cart.php">🛒</a>
-            <!-- User profile icon - links to profile page -->
-            <a href="profile.php">👤</a>
-            <!-- Login link for regular users -->
-            <a href="login.php">Login</a>
-            <!-- Admin panel access -->
-            <a href="admin/login.php" class="admin-btn">Admin</a>
-        </div>
-
-    </nav>
-        <?php
-
-$notificationCount = 0;
+$unread = 0;
 
 if(isset($_SESSION['userID'])){
 
-    $uid = $_SESSION['userID'];
+    $userID = $_SESSION['userID'];
 
-    $msgQuery = $conn->prepare("
-        SELECT COUNT(*) as total
+    $stmt = $conn->prepare("
+        SELECT COUNT(*) AS total
         FROM tblMessages
         WHERE receiverID = ?
         AND isRead = 0
     ");
 
-    $msgQuery->bind_param("i", $uid);
-    $msgQuery->execute();
+    $stmt->bind_param("i", $userID);
+    $stmt->execute();
 
-    $result = $msgQuery->get_result()->fetch_assoc();
+    $result = $stmt->get_result();
+    $data = $result->fetch_assoc();
 
-    $notificationCount = $result['total'];
+    $unread = $data['total'];
 }
+
 ?>
 
-<a href="messages.php" class="notification-bell">
+<!DOCTYPE html>
+<html lang="en">
 
-🔔
+<head>
 
-<?php if($notificationCount > 0): ?>
-<span class="notif-count">
-<?= $notificationCount ?>
-</span>
-<?php endif; ?>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-</a>
-</body>
-</html>
+<title>Xclusive Society</title>
+
+<link rel="stylesheet" href="style.css">
+
+<style>
+
+.notification-link{
+    position:relative;
+}
+
+.notif-badge{
+    position:absolute;
+    top:-8px;
+    right:-10px;
+    background:red;
+    color:white;
+    border-radius:50%;
+    padding:3px 7px;
+    font-size:11px;
+    font-weight:bold;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+
+    <!-- LOGO -->
+    <div class="logo">
+        <a href="index.php">
+            <img src="images/logo.png" alt="Logo">
+        </a>
+    </div>
+
+    <!-- NAV LINKS -->
+    <ul class="nav-links">
+        <li>
+            <a href="new.php">New</a>
+        </li>
+        <li>
+            <a href="index.php">Home</a>
+        </li>
+
+        <li>
+            <a href="men.php">Men</a>
+        </li>
+
+        <li>
+            <a href="women.php">Women</a>
+        </li>
+
+        <li>
+            <a href="kids.php">Kids</a>
+        </li>
+
+    </ul>
+
+    <!-- ICONS -->
+    <div class="icons">
+
+    <a href="cart.php">🛒</a>
+
+    <?php if(isset($_SESSION['userID'])): ?>
+
+        <a href="profile.php">👤</a>
+
+        <a href="messages.php" class="notification-link">
+
+            💬
+
+            <?php if($unread > 0): ?>
+                <span class="notif-badge">
+                    <?= $unread ?>
+                </span>
+            <?php endif; ?>
+
+        </a>
+
+    <?php endif; ?>
+
+    <a href="login.php">Login</a>
+
+    <a href="admin/login.php">Admin</a>
+
+</div>
+
+</nav>
