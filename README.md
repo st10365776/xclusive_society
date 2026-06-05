@@ -84,7 +84,3 @@ The `admin/` folder contains pages for:
 - Ensure `includes/DBConn.php` points to the correct MySQL credentials.
 - If the database tables are not present, run any provided setup scripts or import the schema manually.
 - PHPMailer is included via Composer and can be used for email delivery if SMTP is configured.
-
-## Contact
-
-For support or questions about the project, inspect the source files in `includes/` and the admin dashboard for custom configuration details.
