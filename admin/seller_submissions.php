@@ -94,6 +94,7 @@ button{
 <a href="dashboard.php">Dashboard</a>
 <a href="customers.php">Customers</a>
 <a href="products.php">Products</a>
+<a href="orders.php">Orders</a>
 <a href="seller_submissions.php">Seller Submissions</a>
 <a href="logout.php" class="logout">Logout</a>
 </div>

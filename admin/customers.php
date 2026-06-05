@@ -90,6 +90,19 @@ cursor:pointer;
 <a href="dashboard.php">Dashboard</a>
 <a href="customers.php">Customers</a>
 <a href="products.php">Products</a>
+<a href="orders.php">Orders</a>
+<a href="admin_messages.php"
+           class="notification-link">
+
+            🔔 Notifications
+
+            <?php if($unread > 0): ?>
+                <span class="notif-badge">
+                    <?= $unread ?>
+                </span>
+            <?php endif; ?>
+
+        </a>
 <a href="logout.php" class="logout">Logout</a>
 </div>
 

@@ -72,6 +72,9 @@
 <a href="seller_submission.php" class="sell-btn">
     Sell Product
 </a>
+<a href="order-history.php" class="order-history-btn">
+    📋 Order History
+</a>
        </div>
 
        <!-- ORDERS SECTION -->

@@ -2,7 +2,10 @@
 
 function getProductsByCategory(mysqli $conn, string $category): mysqli_result
 {
-    $sql = "SELECT productCode, productName, price, imagePath
+    require_once __DIR__ . '/schema_helpers.php';
+    ensureStoreSchema($conn);
+
+    $sql = "SELECT productCode, productName, price, imagePath, quantity
             FROM tblClothes
             WHERE LOWER(category) = ? AND isActive = 1
             ORDER BY displayOrder, productID";
@@ -35,6 +38,7 @@ function renderProductGrid(mysqli_result $products): void
         $name  = htmlspecialchars($product['productName']);
         $price = htmlspecialchars(formatRand($product['price']));
         $image = htmlspecialchars($product['imagePath']);
+        $quantity = (int)($product['quantity'] ?? 0);
         ?>
 
         <div class="product">
@@ -52,13 +56,15 @@ function renderProductGrid(mysqli_result $products): void
                 <!-- Product Price -->
                 <p>R<?= $price; ?></p>
 
+                <p class="stock-text"><?= $quantity > 0 ? $quantity . ' in stock' : 'Out of stock'; ?></p>
+
                 <!-- Hidden Product ID -->
                 <input type="hidden"
                        name="id"
                        value="<?= $code; ?>">
 
                 <!-- Image/Icon Add To Cart Button -->
-                <button type="submit" class="cart-btn">
+                <button type="submit" class="cart-btn" <?= $quantity <= 0 ? 'disabled' : ''; ?>>
                      <!-- <img src="images/add-to-cart-iconn.png" alt="Add to Cart"> -->
                       <!-- <img src = "images/add-to-cart-icon_.gif" alt = "Add to Cart"> -->
                     <img src = "images\Add-Cart.gif" alt = "Add to Cart"> 

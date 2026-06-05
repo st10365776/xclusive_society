@@ -22,6 +22,8 @@
 
 session_start();
 include 'includes/DBConn.php';
+require_once 'includes/schema_helpers.php';
+ensureStoreSchema($conn);
 
 /* Check if product ID was submitted */
 if (!isset($_POST['id'])) {
@@ -35,7 +37,7 @@ if (!isset($_POST['id'])) {
 $id = $_POST['id'];
 
 /* Fetch product from database */
-$sql = "SELECT productCode, productName, price, imagePath
+$sql = "SELECT productCode, productName, price, imagePath, quantity
         FROM tblClothes
         WHERE productCode = ? AND isActive = 1";
 
@@ -53,6 +55,12 @@ if (!$product) {
 
 }
 
+if ((int)$product['quantity'] <= 0) {
+    $_SESSION['cart_message'] = "This item is currently out of stock.";
+    header("Location: " . $_SERVER['HTTP_REFERER']);
+    exit();
+}
+
 /* Create cart session if not already created */
 if (!isset($_SESSION['cart'])) {
 
@@ -62,6 +70,12 @@ if (!isset($_SESSION['cart'])) {
 
 /* Product already exists in cart */
 if (isset($_SESSION['cart'][$id])) {
+
+    if ($_SESSION['cart'][$id]['qty'] >= (int)$product['quantity']) {
+        $_SESSION['cart_message'] = "Only " . (int)$product['quantity'] . " left in stock for this item.";
+        header("Location: " . $_SERVER['HTTP_REFERER']);
+        exit();
+    }
 
     $_SESSION['cart'][$id]['qty'] += 1;
 

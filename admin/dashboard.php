@@ -131,6 +131,8 @@ body{
 
         <a href="products.php">Products</a>
 
+        <a href="orders.php">Orders</a>
+
         <a href="seller_submissions.php">
             Seller Submissions
         </a>

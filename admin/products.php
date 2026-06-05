@@ -1,22 +1,13 @@
 <?php
 include 'admin_auth.php';
 require_once '../includes/DBConn.php';
+require_once '../includes/schema_helpers.php';
 
 $message = "";
 $error = "";
 $categories = ['new', 'men', 'women', 'kids'];
 
-function ensureProductColumn(mysqli $conn, string $column, string $definition): void
-{
-    $columnCheck = $conn->query("SHOW COLUMNS FROM tblClothes LIKE '$column'");
-    if ($columnCheck && $columnCheck->num_rows === 0) {
-        $conn->query("ALTER TABLE tblClothes ADD $column $definition");
-    }
-}
-
-ensureProductColumn($conn, 'description', 'TEXT DEFAULT NULL AFTER category');
-ensureProductColumn($conn, 'isActive', 'BOOLEAN DEFAULT TRUE');
-ensureProductColumn($conn, 'displayOrder', 'INT DEFAULT 0');
+ensureStoreSchema($conn);
 $conn->query("ALTER TABLE tblClothes MODIFY category VARCHAR(30) NOT NULL");
 $conn->query("UPDATE tblClothes SET category = LOWER(category)");
 
@@ -24,7 +15,7 @@ $editProduct = null;
 
 if (isset($_GET['edit'])) {
     $editID = intval($_GET['edit']);
-    $stmt = $conn->prepare("SELECT productID, productName, category, description, price, imagePath, isActive FROM tblClothes WHERE productID = ?");
+    $stmt = $conn->prepare("SELECT productID, productName, category, description, price, imagePath, isActive, quantity FROM tblClothes WHERE productID = ?");
     $stmt->bind_param("i", $editID);
     $stmt->execute();
     $editProduct = $stmt->get_result()->fetch_assoc();
@@ -50,6 +41,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'save_
     $productName = trim($_POST['productName'] ?? '');
     $category = strtolower(trim($_POST['category'] ?? ''));
     $price = trim($_POST['price'] ?? '');
+    $quantity = trim($_POST['quantity'] ?? '10');
     $description = trim($_POST['description'] ?? '');
     $dbImagePath = $_POST['existingImage'] ?? '';
 
@@ -59,6 +51,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'save_
         $error = "Please choose a valid category.";
     } elseif (!is_numeric($price) || (float)$price < 0) {
         $error = "Please enter a valid price.";
+    } elseif (!ctype_digit($quantity) || (int)$quantity < 0) {
+        $error = "Please enter a valid quantity.";
     } elseif (!$isEditing && (!isset($_FILES['image']) || $_FILES['image']['error'] !== UPLOAD_ERR_OK)) {
         $uploadErrors = [
             UPLOAD_ERR_INI_SIZE => "The image is bigger than the server upload limit.",
@@ -110,14 +104,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'save_
 
         if ($error === "") {
             $priceValue = (float)$price;
+            $quantityValue = (int)$quantity;
 
             if ($isEditing) {
                 $stmt = $conn->prepare(
                     "UPDATE tblClothes
-                     SET productName = ?, category = ?, description = ?, price = ?, imagePath = ?
+                     SET productName = ?, category = ?, description = ?, price = ?, imagePath = ?, quantity = ?
                      WHERE productID = ?"
                 );
-                $stmt->bind_param("sssdsi", $productName, $category, $description, $priceValue, $dbImagePath, $productID);
+                $stmt->bind_param("sssdsii", $productName, $category, $description, $priceValue, $dbImagePath, $quantityValue, $productID);
 
                 if ($stmt->execute()) {
                     $message = "Product updated successfully.";
@@ -133,10 +128,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'save_
                 $displayOrder = $displayOrderResult->get_result()->fetch_assoc()['nextOrder'];
 
                 $stmt = $conn->prepare(
-                    "INSERT INTO tblClothes(productCode, productName, category, description, price, imagePath, displayOrder)
-                     VALUES (?, ?, ?, ?, ?, ?, ?)"
+                    "INSERT INTO tblClothes(productCode, productName, category, description, price, imagePath, displayOrder, quantity)
+                     VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
                 );
-                $stmt->bind_param("ssssdsi", $productCode, $productName, $category, $description, $priceValue, $dbImagePath, $displayOrder);
+                $stmt->bind_param("ssssdsii", $productCode, $productName, $category, $description, $priceValue, $dbImagePath, $displayOrder, $quantityValue);
 
                 if ($stmt->execute()) {
                     $message = "Product added successfully.";
@@ -148,7 +143,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'save_
     }
 }
 
-$products = $conn->query("SELECT productID, productName, category, description, price, imagePath, isActive FROM tblClothes ORDER BY category, displayOrder, productID DESC");
+$products = $conn->query("SELECT productID, productName, category, description, price, imagePath, isActive, quantity FROM tblClothes ORDER BY category, displayOrder, productID DESC");
 ?>
 
 <!DOCTYPE html>
@@ -191,6 +186,19 @@ th,td{padding:12px;border-bottom:1px solid #333;text-align:left;vertical-align:t
 <a href="dashboard.php">Dashboard</a>
 <a href="customers.php">Customers</a>
 <a href="products.php">Products</a>
+<a href="orders.php">Orders</a>
+<a href="admin_messages.php"
+           class="notification-link">
+
+            🔔 Notifications
+
+            <?php if($unread > 0): ?>
+                <span class="notif-badge">
+                    <?= $unread ?>
+                </span>
+            <?php endif; ?>
+
+        </a>
 <a href="seller_submissions.php">Seller Submissions</a>
 <!-- <a href="message_user.php?id=<?= $row['userID'] ?>">Message Seller</a> -->
 <a href="logout.php" class="logout">Logout</a>
@@ -216,6 +224,11 @@ th,td{padding:12px;border-bottom:1px solid #333;text-align:left;vertical-align:t
 <div>
 <label>Price</label>
 <input name="price" type="number" min="0" step="0.01" value="<?= htmlspecialchars($editProduct['price'] ?? ''); ?>" required>
+</div>
+
+<div>
+<label>Quantity</label>
+<input name="quantity" type="number" min="0" step="1" value="<?= htmlspecialchars($editProduct['quantity'] ?? '10'); ?>" required>
 </div>
 
 <div>
@@ -260,6 +273,7 @@ th,td{padding:12px;border-bottom:1px solid #333;text-align:left;vertical-align:t
 <th>Name</th>
 <th>Category</th>
 <th>Price</th>
+<th>Qty</th>
 <th>Description</th>
 <th>Status</th>
 <th>Actions</th>
@@ -271,6 +285,7 @@ th,td{padding:12px;border-bottom:1px solid #333;text-align:left;vertical-align:t
 <td><?= htmlspecialchars($product['productName']); ?></td>
 <td><?= htmlspecialchars(ucfirst($product['category'])); ?></td>
 <td>R<?= number_format((float)$product['price'], 2); ?></td>
+<td><?= (int)$product['quantity']; ?></td>
 <td class="muted"><?= nl2br(htmlspecialchars($product['description'] ?? '')); ?></td>
 <td><?= $product['isActive'] ? 'Active' : 'Hidden'; ?></td>
 <td>

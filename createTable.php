@@ -41,6 +41,7 @@
             imagePath VARCHAR(255) NOT NULL,
             isActive BOOLEAN DEFAULT TRUE,
             displayOrder INT DEFAULT 0,
+            quantity INT NOT NULL DEFAULT 10,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         )"
     );
@@ -51,6 +52,10 @@
             userID INT NOT NULL,
             total DECIMAL(10,2) NOT NULL,
             status VARCHAR(30) DEFAULT 'Pending',
+            shippingAddress VARCHAR(255) DEFAULT NULL,
+            shippingMethod VARCHAR(80) DEFAULT NULL,
+            paymentMethod VARCHAR(80) DEFAULT NULL,
+            paymentLast4 VARCHAR(4) DEFAULT NULL,
             orderDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             FOREIGN KEY (userID) REFERENCES tblUser(userID) ON DELETE CASCADE
         )"
@@ -73,6 +78,24 @@
             adminID INT AUTO_INCREMENT PRIMARY KEY,
             adminEmail VARCHAR(150) NOT NULL UNIQUE,
             password VARCHAR(255) NOT NULL
+        )"
+    );
+
+    $conn->query(
+        "CREATE TABLE tblSellerSubmissions (
+            submissionID INT AUTO_INCREMENT PRIMARY KEY,
+            userID INT NOT NULL,
+            itemName VARCHAR(180) NOT NULL,
+            brand VARCHAR(100),
+            size VARCHAR(50),
+            itemCondition VARCHAR(50),
+            category VARCHAR(30),
+            description TEXT,
+            askingPrice DECIMAL(10,2) NOT NULL,
+            imagePath VARCHAR(255),
+            status VARCHAR(30) DEFAULT 'Pending',
+            submittedDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (userID) REFERENCES tblUser(userID) ON DELETE CASCADE
         )"
     );
 

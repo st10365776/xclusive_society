@@ -85,12 +85,13 @@ if(isset($_SESSION['userID'])){
     <!-- NAV LINKS -->
     <ul class="nav-links">
         <li>
-            <a href="new.php">New</a>
-        </li>
-        <li>
             <a href="index.php">Home</a>
         </li>
 
+        <li>
+            <a href="new.php">New</a>
+        </li>
+    
         <li>
             <a href="men.php">Men</a>
         </li>

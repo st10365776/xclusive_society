@@ -20,6 +20,11 @@
     <section class="cart-page">
         <h1>Your Bag</h1>
 
+        <?php if (!empty($_SESSION['cart_message'])): ?>
+            <p class="cart-alert"><?= htmlspecialchars($_SESSION['cart_message']); ?></p>
+            <?php unset($_SESSION['cart_message']); ?>
+        <?php endif; ?>
+
         <div class="cart-wrapper">
             <div class="cart-items">
                 
@@ -69,10 +74,16 @@
                 <!-- Display total cart value -->
                 <p>Total: R<?php echo number_format($total, 2); ?></p>
 
-                <!-- Form to proceed to checkout -->
-                <form action="place_order.php" method="POST">
-                    <button class="checkout-btn">Place Order</button>
-                </form>
+                <?php if (!empty($cart)): ?>
+                    <!-- Form to proceed to checkout -->
+                    <form action="checkout.php" method="GET">
+                        <button class="checkout-btn">Checkout</button>
+                    </form>
+
+                    <form action="empty-cart.php" method="POST" onsubmit="return confirm('Empty your cart?')">
+                        <button class="empty-cart-btn" type="submit">Empty Cart</button>
+                    </form>
+                <?php endif; ?>
             </div>
         </div>
     </section>

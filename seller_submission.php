@@ -30,6 +30,7 @@ if (isset($_POST['submit_item'])) {
     $itemName   = trim($_POST['itemName']);
     $brand      = trim($_POST['brand']);
     $size       = trim($_POST['size']);
+    $category   = trim($_POST['category']);
     $condition  = trim($_POST['condition']);
     $description= trim($_POST['description']);
     $price      = trim($_POST['price']);
@@ -74,21 +75,23 @@ if (isset($_POST['submit_item'])) {
             itemName,
             brand,
             size,
+            category,
             itemCondition,
             description,
             askingPrice,
             imagePath,
             status
         )
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     ");
 
     $stmt->bind_param(
-        "isssssdss",
+        "issssssdss",
         $userID,
         $itemName,
         $brand,
         $size,
+        $category,
         $condition,
         $description,
         $price,
@@ -99,7 +102,7 @@ if (isset($_POST['submit_item'])) {
     if ($stmt->execute()) {
         $message = "✅ Product submitted successfully. Waiting for admin approval.";
     } else {
-        $message = "❌ Something went wrong.";
+        $message = "❌ Error: " . $stmt->error;
     }
 }
 ?>
@@ -178,6 +181,29 @@ button:hover{
     background:#333;
 }
 
+.back-button{
+    display:inline-block;
+    margin-top:15px;
+    width:100%;
+    background:#f5f5f5;
+    color:#111;
+    border:2px solid #ddd;
+    padding:12px;
+    border-radius:6px;
+    text-align:center;
+    text-decoration:none;
+    font-size:15px;
+    font-weight:500;
+    cursor:pointer;
+    transition:0.3s;
+    box-sizing:border-box;
+}
+
+.back-button:hover{
+    background:#e8e8e8;
+    border-color:#111;
+}
+
 </style>
 
 </head>
@@ -245,6 +271,8 @@ button:hover{
         </button>
 
     </form>
+
+    <a href="javascript:history.back()" class="back-button">← Go Back</a>
 
 </div>
 
